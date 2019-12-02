@@ -1,0 +1,40 @@
+{
+  "name": "nudommy",
+  "version": "0.0.0",
+  "description": "A mostly-back node academic project",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/tsc -p tsconfig.json",
+    "start-prod": "node dest/index.js",
+    "start": "./node_modules/.bin/ts-node src/index.ts",
+    "dev": "./node_modules/.bin/nodemon "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Speedphoenix/Nudommy.git"
+  },
+  "author": "Speedphoenix",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Speedphoenix/Nudommy/issues"
+  },
+  "homepage": "https://github.com/Speedphoenix/Nudommy#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.1",
+    "encoding-down": "^6.3.0",
+    "express": "^4.17.1",
+    "level-ws": "^2.0.0",
+    "leveldown": "^5.4.1",
+    "levelup": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/levelup": "^3.1.1",
+    "@types/node": "^12.12.14",
+    "nodemon": "^2.0.1",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.2"
+  }
+}
