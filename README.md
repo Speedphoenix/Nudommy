@@ -6,7 +6,7 @@ If you are making changes use
 ```sh
 npm run dev
 ```
-This will use nodemon and will restart the server whenever a file changes
+This uses nodemon and will restart the server whenever a file changes.
 
 If you want a better production-ready server run
 ```sh
