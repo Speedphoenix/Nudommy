@@ -66,3 +66,6 @@ typings/
 # vim swap files
 *.swp
 *.sop
+
+# the database files
+db
