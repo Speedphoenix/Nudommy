@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- 8.1
+jobs:
+  include:
+  - stage: build
+    script: npm run build
+  - stage: test
+    script: npm run test
+  - stage: deploy
+    script: "./deploy"
+deploy:
+  provider: heroku
+  api_key:
+    secure: mxfa5EvQr634Vv5FV1+SFejv5WYSsaWcJWj3VQ5amVIH+Ok87VjOQ7+yCS4v6rkw08NwNJLF9VvnvyL4jdJuElebyVy8uGi97N93mlYM22lJ8W7XwCG5qL8xqam8jEpjIgqJmZ/aij5MFGNgHcGIp2pIKHcDlbI0pDqEBo27D3Uheng0FNCFKOfRTlOUbO6jUCeZD2/eqFJwv5to/1t3N8BSSaQHsrhuuLaHheK0DPfL+vQfp0UNtNEHhxO1arN+Gt72xHMBnIcmWL7Kl3O90ix6Nu47+HpwO+78Q1/QCNIsMCCKXPXrFsKhojTeOAEmQx212JgNnBRQmOPuhZFWxGhXPheuxXYA2uZIv5rl10qFhGdltrziqn5zIPXiFROhk94fxFHTJJ4gHzT9K73oxp+Rt+flU3ELB4znizcJ1mG5kdCEGLjzd5Jj5AWH1vjEM0lafQjzQ6uEuliYRFQ1OTA3iuJB5RuxJDBPhoDdmxHR55o0+64gOwOthFX6nyqKZCnhPZCItSZYLqMmE4muCQ1B2oYtS8mkP0pqvcorsX5pUUBgcPM9MCOeywcK2qH4IDZg5rfNADiPcyRZ2f8DgOs1j+Fu6GYIGUXAReaR9kGfVPUTe3yp3+ckczxqQUyKbM1vg74OdYyG2HTMiT2GYNfoPe9YqboYmCq8M1JlccU=
