@@ -19,7 +19,7 @@ const userRouter = express.Router();
 const authRouter = express.Router();
 
 app.use(session({
-  secret: 'my phrase is very secret',
+  secret: process.env.SESSIONSECRET || 'my phrase is very secret',
   store: new LevelStore('./db/sessions'),
   resave: true,
   saveUninitialized: true,
