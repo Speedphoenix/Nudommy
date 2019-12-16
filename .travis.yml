@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 8.10
+  - 8.10
 
 before_install:
   - npm i -g npm@6.13.4
@@ -12,15 +12,17 @@ jobs:
   - stage: test
     script: npm run test
   - stage: deploy
-    script: "./deploy"
+    script: skip
+    deploy:
+      provider: heroku
+      api_key:
+        secure: DebFh0wJjpKIGXH0bv/voNr+q3YlWTRUjfLHBXUXHLLvFo0ZRGrVUnNgjJMxKl2Gz8sVxqivb+N+nAsvhkxvlZnbZUZr+jUI5oec7JO8SpI36C7gig33YPnBO7xKo8GvqPd5FElRDkktE8bVPYSgzPIon+lTGlQtNk5kr4tOImh+/Xr0AjOIDfpKcAbuH1ePvWtms0mPNAQd10eeGYvzLpK0/ywYuNcz6/ee2KdCZMgliW+YEYXcHOV79AZ8jUgYnrrKW/CudTqlSn5wLL9jmcbUlwRZ4SAsUwknSQetxWN5RS3tEvFnuS+dZL0FGsP+3BvW9GdF31n4LF5dg+ddPYVtbOzucqn404Q5ltnjTFD/usqHR+rVjLD3RIomBbwWzo0aimEHju1c1a+nwoyQvnKWEdS0GI0FDjMpUowC/akG3u/guxFXd4WQVckN/hC+4kHjYnLmQrCjYe5H1oD0S7jMAk6yjfg3rQD++MXXjR1fUEctbMBpBpBYTzRQgDG9lmVJNDc3rmyOerCVSAYe72rzP/Ioib67woVBxgW0Mom+j+HBznU5UHF/oe5aKULjuMSalmpcrWqle2m+C761mwji+7XZWxy7vfSOePHIW/VU/ocimdcWLYa1nrT+imYya0VN8wiJKCie9aNFq3ZmkqKH/kt7jHumwlGhmi/exQc=
+      app: nudomy
+      on:
+        repo: Speedphoenix/Nudommy
 
 stages:
   - build
   - test
   - name: deploy
     if: branch = master
-
-deploy:
-  provider: heroku
-  api_key:
-    secure: mxfa5EvQr634Vv5FV1+SFejv5WYSsaWcJWj3VQ5amVIH+Ok87VjOQ7+yCS4v6rkw08NwNJLF9VvnvyL4jdJuElebyVy8uGi97N93mlYM22lJ8W7XwCG5qL8xqam8jEpjIgqJmZ/aij5MFGNgHcGIp2pIKHcDlbI0pDqEBo27D3Uheng0FNCFKOfRTlOUbO6jUCeZD2/eqFJwv5to/1t3N8BSSaQHsrhuuLaHheK0DPfL+vQfp0UNtNEHhxO1arN+Gt72xHMBnIcmWL7Kl3O90ix6Nu47+HpwO+78Q1/QCNIsMCCKXPXrFsKhojTeOAEmQx212JgNnBRQmOPuhZFWxGhXPheuxXYA2uZIv5rl10qFhGdltrziqn5zIPXiFROhk94fxFHTJJ4gHzT9K73oxp+Rt+flU3ELB4znizcJ1mG5kdCEGLjzd5Jj5AWH1vjEM0lafQjzQ6uEuliYRFQ1OTA3iuJB5RuxJDBPhoDdmxHR55o0+64gOwOthFX6nyqKZCnhPZCItSZYLqMmE4muCQ1B2oYtS8mkP0pqvcorsX5pUUBgcPM9MCOeywcK2qH4IDZg5rfNADiPcyRZ2f8DgOs1j+Fu6GYIGUXAReaR9kGfVPUTe3yp3+ckczxqQUyKbM1vg74OdYyG2HTMiT2GYNfoPe9YqboYmCq8M1JlccU=

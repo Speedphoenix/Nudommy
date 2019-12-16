@@ -14,7 +14,7 @@ var dbUser = new user_1.UserHandler('./db/users');
 var userRouter = express.Router();
 var authRouter = express.Router();
 app.use(session({
-    secret: 'my phrase is very secret',
+    secret: process.env.SESSIONSECRET || 'my phrase is very secret',
     store: new LevelStore('./db/sessions'),
     resave: true,
     saveUninitialized: true,
