@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Nudomy – Login</title>
+	<script src="/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div id="login-form">
+        <p>Please login to your account</p>
+        <hr/>
+        <form action="/login" method="post">
+          <div class="form-group">
+            <label for="form_username">Username</label>
+            <input id="form_username" type="text" name="username" />
+          </div>
+          <div class="form-group">
+            <label for="form_password">Password</label>
+            <input id="form_password" type="password" name="password" />
+          </div>
+          <button class="btn btn-primary btn-block" type="submit" value="Submit">
+            Connect
+          </button>
+        </form>
+        <% if (err) { %>
+          <h3 id="err-msg" style="color: red">Invalid information</h3>
+        <% } %>
+        <hr/>
+        <button
+          class="btn btn-success btn-block"
+          type="submit"
+          href="/signup"
+          onClick='document.location.href="/signup"'
+        >
+          Create an account
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

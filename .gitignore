@@ -68,4 +68,6 @@ typings/
 *.sop
 
 # the database files
-db
+# db
+# The database folder is committed, but not the files inside it
+# the db folder has its own gitignore
