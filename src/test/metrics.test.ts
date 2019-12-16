@@ -35,7 +35,7 @@ describe('Metrics', function () {
           console.log(result);
           console.log(result[0]);
           if (result) {
-            expect(result[0].value).to.equal("12");
+            expect(result[0].value).to.equal(10);
           }
           done();
         });
