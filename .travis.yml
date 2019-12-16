@@ -17,7 +17,7 @@ jobs:
       provider: heroku
       api_key:
         secure: DebFh0wJjpKIGXH0bv/voNr+q3YlWTRUjfLHBXUXHLLvFo0ZRGrVUnNgjJMxKl2Gz8sVxqivb+N+nAsvhkxvlZnbZUZr+jUI5oec7JO8SpI36C7gig33YPnBO7xKo8GvqPd5FElRDkktE8bVPYSgzPIon+lTGlQtNk5kr4tOImh+/Xr0AjOIDfpKcAbuH1ePvWtms0mPNAQd10eeGYvzLpK0/ywYuNcz6/ee2KdCZMgliW+YEYXcHOV79AZ8jUgYnrrKW/CudTqlSn5wLL9jmcbUlwRZ4SAsUwknSQetxWN5RS3tEvFnuS+dZL0FGsP+3BvW9GdF31n4LF5dg+ddPYVtbOzucqn404Q5ltnjTFD/usqHR+rVjLD3RIomBbwWzo0aimEHju1c1a+nwoyQvnKWEdS0GI0FDjMpUowC/akG3u/guxFXd4WQVckN/hC+4kHjYnLmQrCjYe5H1oD0S7jMAk6yjfg3rQD++MXXjR1fUEctbMBpBpBYTzRQgDG9lmVJNDc3rmyOerCVSAYe72rzP/Ioib67woVBxgW0Mom+j+HBznU5UHF/oe5aKULjuMSalmpcrWqle2m+C761mwji+7XZWxy7vfSOePHIW/VU/ocimdcWLYa1nrT+imYya0VN8wiJKCie9aNFq3ZmkqKH/kt7jHumwlGhmi/exQc=
-      app: nudomy
+      app: nudommy
       on:
         repo: Speedphoenix/Nudommy
 
