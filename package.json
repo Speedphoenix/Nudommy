@@ -6,8 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register src/**/*.test.ts",
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
-    "start-prod": "node dest/index.js",
-    "start": "./node_modules/.bin/ts-node src/index.ts",
+    "start-prod": "node dest/server.js",
+    "start": "./node_modules/.bin/ts-node src/server.ts",
     "dev": "./node_modules/.bin/nodemon "
   },
   "repository": {
