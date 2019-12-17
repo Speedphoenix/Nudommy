@@ -1,6 +1,12 @@
 import { LevelDB } from "./leveldb"
 import WriteStream from 'level-ws'
 
+// tells if user who has access to toWhom's information.
+// change this if we ever implement admins
+export function userHasAccess(who: string, toWhom: string): boolean {
+  return who === toWhom;
+}
+
 export class User {
   public username: string;
   public email: string;
@@ -20,6 +26,13 @@ export class User {
     return new User(username, email, password);
   }
 
+  public updateValues(newVals: any): void {
+    if (newVals.email)
+      this.email = newVals.email;
+    if (newVals.password)
+      this.setPassword(newVals.password);
+  }
+
   public setPassword(toSet: string): void {
     // Hash and set password
     this.password = toSet;
@@ -27,6 +40,10 @@ export class User {
 
   public getPassword(): string {
     return this.password;
+  }
+
+  public removePassword(): void {
+    delete this.password;
   }
 
   public validatePassword(toValidate: String): boolean {
@@ -62,7 +79,9 @@ export class UserHandler {
   }
 
   public delete(username: string, callback: (err: Error | null) => void) {
-    // TODO
+    this.db.del(`user:${username}`, (err: Error | null) => {
+      callback(err);
+    });
   }
 }
 
