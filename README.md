@@ -11,6 +11,8 @@ A running version of the project can be found at [nudommy.herokuapp.com](https:/
 A simple web API with a dashboard.  
 Nudommy keeps track of users and their metrics.
 
+For a list of usable api routes on Nudommy see [http Routes](#http-routes).
+
 The instructions for this project can be found [here](https://github.com/adaltas/ece-nodejs/blob/2019-fall-5-modules/PROJECT.md).  
 
 # Usage
@@ -102,6 +104,19 @@ Optional configuration through environment variables
 This project is made to transpile/build and execute its tests on every push, and deploy automatically on every push to master.  
 Latest build information can be found at [travis-ci.org/Speedphoenix/Nudommy](https://travis-ci.org/Speedphoenix/Nudommy).  
 See [`.travis.yml`](.travis.yml) for more information.
+
+# http Routes
+
+|*Method*:Route|Description|Parameters|
+|--|--|--|
+|*get*:`/`|The front page of Nudommy||
+|*get*:`/login`|The login page||
+|*post*:`/login`|The destination of the login form. Will redirect to `/` on success, will stay on `/login` on failure.||
+|*get*:`/signup`|The signup page. Note that the signup form will redirect to `/login` and log you in automatically on success||
+|*get*:`/logout`|Will log the current session out and redirect to `/login`||
+|*get*:`/user/:username`|Returns information about a user|`username`: The user to be fetched|
+|*post*:`/user`|Creates a user, or returns status code `409` if it already exists||
+|metrics...|||
 
 # External Sources
 
