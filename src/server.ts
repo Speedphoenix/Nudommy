@@ -4,7 +4,7 @@ import session = require('express-session');
 import levelSession = require('level-session-store');
 
 import { MetricsHandler } from './metrics';
-import { UserHandler, User } from './user';
+import { UserHandler, User, userHasAccess } from './user';
 
 const app = express();
 const port: string = process.env.PORT || '8096';
@@ -33,6 +33,27 @@ app.set('views', 'views');
 app.set('view engine', 'ejs');
 
 
+const logUserOut = function (req: any, res: any, next: any) {
+  delete req.session.loggedIn;
+  delete req.session.user;
+  next();
+}
+
+const authCheck = function (req: any, res: any, next: any) {
+  if (req.session.loggedIn) {
+    next();
+  } else res.redirect('/login');
+}
+
+const correctUser = function (req: any, res: any, next: any) {
+  if (!req.session.loggedIn || !userHasAccess(req.session.user, req.params.username))
+    res.status(403).send("Operations to this user are not permitted");
+  else {
+    next();
+  }
+}
+
+
 authRouter.get('/login', (req: any, res: any) => {
   res.render('login', { err: false });
 });
@@ -41,7 +62,7 @@ authRouter.get('/signup', (req: any, res: any) => {
   res.render('signup');
 });
 
-authRouter.get('/logout', (req: any, res: any) => {
+authRouter.get('/logout', logUserOut, (req: any, res: any) => {
   delete req.session.loggedIn;
   delete req.session.user;
   res.redirect('/login');
@@ -64,7 +85,6 @@ app.use(authRouter);
 
 
 userRouter.post('/', (req: any, res: any, next: any) => {
-  console.log(req.body);
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
     if (!err || result !== undefined) {
      res.status(409).send("user already exists");
@@ -81,19 +101,40 @@ userRouter.get('/:username', (req: any, res: any, next: any) => {
   dbUser.get(req.params.username, function (err: Error | null, result?: User) {
     if (err || result === undefined) {
       res.status(404).send("user not found");
-    } else res.status(200).json(result);
+    } else {
+      if (!req.session.loggedIn || !userHasAccess(req.session.user, req.params.username))
+        result.removePassword();
+      res.status(200).json(result);
+    }
+  });
+});
+
+userRouter.put('/:username', correctUser, (req: any, res: any, next: any) => {
+  dbUser.get(req.body.username, function (err: Error | null, result?: User) {
+    if (!err || result === undefined) {
+     res.status(404).send("user does not exist");
+    } else {
+      result.updateValues(req.body);
+      dbUser.save(result, function (err: Error | null) {
+        if (err) next(err);
+        else res.status(204).send("user updated");
+      });
+    }
+  });
+});
+
+userRouter.delete('/:username', correctUser, logUserOut, (req: any, res: any, next: any) => {
+  console.log("inside the delete");
+  dbUser.delete(req.body.username, function (err: Error | null) {
+    if (!err) {
+     res.status(404).send("user does not exist");
+    } else {
+      res.status(204).send("user deleted");
+    }
   });
 });
 
 app.use('/user', userRouter);
-
-
-const authCheck = function (req: any, res: any, next: any) {
-  if (req.session.loggedIn) {
-    next();
-  } else res.redirect('/login');
-}
-
 
 app.get(
   '/',
@@ -158,3 +199,5 @@ app.listen(port, (err: Error) => {
   }
   console.log(`server is listening on port ${port}`);
 });
+
+export { dbUser, dbMet };

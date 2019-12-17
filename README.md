@@ -108,15 +108,17 @@ See [`.travis.yml`](.travis.yml) for more information.
 
 # http Routes
 
-|*Method*:Route|Description|Parameters|
+|*METHOD*:Route|Description|Parameters|
 |--|--|--|
-|*get*:`/`|The front page of Nudommy||
-|*get*:`/login`|The login page||
-|*post*:`/login`|The destination of the login form. Will redirect to `/` on success, will stay on `/login` on failure.||
-|*get*:`/signup`|The signup page. Note that the signup form will redirect to `/login` and log you in automatically on success||
-|*get*:`/logout`|Will log the current session out and redirect to `/login`||
-|*get*:`/user/:username`|Returns information about a user|`username`: The user to be fetched|
-|*post*:`/user`|Creates a user, or returns status code `409` if it already exists||
+|*GET*:`/`|The front page of Nudommy||
+|*GET*:`/login`|The login page||
+|*POST*:`/login`|The destination of the login form. Will redirect to `/` on success, will stay on `/login` on failure.||
+|*GET*:`/signup`|The signup page. Note that the signup form will redirect to `/login` and log you in automatically on success||
+|*GET*:`/logout`|Will log the current session out and redirect to `/login`||
+|*GET*:`/user/:username`|Returns information about a user. Note that the password is only given if that user is currently logged in.|`username`: The user to be fetched|
+|*POST*:`/user`|Creates a user, or returns status code `409` if it already exists||
+|*PUT*:`/user/:username`|Updates the information about a user, or returns status code 403 if the current user does not have permission to change it.|`username`: The user to be updated|
+|*DELETE*:`/user/:username`|Deletes a user and logs the current user out, or returns status code 403 if the current user does not have permission to change it.|`username`: The user to be deleted|
 |metrics...|||
 
 # External Sources
