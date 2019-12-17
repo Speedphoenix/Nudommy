@@ -11,6 +11,8 @@ A running version of the project can be found at [nudommy.herokuapp.com](https:/
 A simple web API with a dashboard.  
 Nudommy keeps track of users and their metrics.
 
+The instructions for this project can be found [here](https://github.com/adaltas/ece-nodejs/blob/2019-fall-5-modules/PROJECT.md).  
+
 # Usage
 
 ## Installing Nudommy
@@ -101,8 +103,8 @@ This project is made to transpile/build and execute its tests on every push, and
 Latest build information can be found at [travis-ci.org/Speedphoenix/Nudommy](https://travis-ci.org/Speedphoenix/Nudommy).  
 See [`.travis.yml`](.travis.yml) for more information.
 
-# Misc
-The instructions for this project can be found [here](https://github.com/adaltas/ece-nodejs/blob/2019-fall-5-modules/PROJECT.md).  
+# External Sources
+
 The initial parts of this project were taken from [Speedphoenix's (Leonardo) versions of the academic nodejs labs](https://github.com/Speedphoenix/nodelabs).
 
 # Problems and difficulties encountered
