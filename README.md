@@ -1,6 +1,7 @@
 # Nudommy
 [![Build Status](https://travis-ci.org/Speedphoenix/Nudommy.svg?branch=master)](https://travis-ci.org/Speedphoenix/Nudommy)
 [![HitCount](http://hits.dwyl.io/Speedphoenix/Nudommy.svg)](http://hits.dwyl.io/Speedphoenix/Nudommy)
+[![Maintainability](https://api.codeclimate.com/v1/badges/01e1c52cd9187e7b138a/maintainability)](https://codeclimate.com/github/Speedphoenix/Nudommy/maintainability)
 
 A mostly-back node academic project
 

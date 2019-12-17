@@ -1,0 +1,5 @@
+exclude_patterns:
+- "db/"
+- "public/**/bootstrap*"
+- "public/js/jquery*"
+- "dest/"
