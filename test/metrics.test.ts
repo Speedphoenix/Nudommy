@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { Metric, MetricsHandler } from '../src/metrics'
 import { LevelDB } from "../src/leveldb"
 
-const dbPath: string = './db/test';
-var dbMet: MetricsHandler;
+const dbPath: string = './db/test-metrics';
+let dbMet: MetricsHandler;
 
 describe('Metrics', function () {
   before(function () {
@@ -28,12 +28,10 @@ describe('Metrics', function () {
     it('should get a saved value', function (done) {
       let metrics: Metric[] = [];
       metrics.push(new Metric('1', 10));
-      dbMet.save("kim", metrics, function (err: Error | null) {
-        dbMet.getOne("kim", function (err: Error | null, result: Metric[]) {
+      dbMet.save('kima', metrics, function (err: Error | null) {
+        dbMet.getOne('kima', function (err: Error | null, result: Metric[]) {
           expect(err).to.be.null;
           expect(result).to.not.be.undefined;
-          console.log(result);
-          console.log(result[0]);
           if (result) {
             expect(result[0].value).to.equal(10);
           }
