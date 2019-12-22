@@ -4,7 +4,7 @@
   "description": "A mostly-back node academic project",
   "main": "src/server.ts",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -r ts-node/register src/**/*.test.ts",
+    "test": "./node_modules/.bin/mocha -r ts-node/register test/**/*.test.ts",
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
     "start-prod": "node dest/server.js",
     "start": "./node_modules/.bin/ts-node src/server.ts",
