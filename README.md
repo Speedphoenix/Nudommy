@@ -121,6 +121,10 @@ See [`.travis.yml`](.travis.yml) for more information.
 |*DELETE*:`/user/:username`|Deletes a user and logs the current user out, or returns status code 403 if the current user does not have permission to change it.|`username`: The user to be deleted|
 |metrics...|||
 
+# Miscellaneous
+
+The name came about from making somewhat random variations of "node".
+
 # External Sources
 
 The initial parts of this project were taken from [Speedphoenix's (Leonardo) versions of the academic nodejs labs](https://github.com/Speedphoenix/nodelabs).
