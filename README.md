@@ -123,7 +123,7 @@ See [`.travis.yml`](.travis.yml) for more information.
 
 # Miscellaneous
 
-The name came about from making somewhat random variations of "node".
+The name came about from combining "node" and "dummy".
 
 # External Sources
 
