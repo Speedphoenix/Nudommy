@@ -64,6 +64,7 @@
         $.ajax({
           url: '/user',
           type: 'POST',
+		  async: false,
           contentType: 'application/json',
           data: JSON.stringify(givenData),
           statusCode: {
