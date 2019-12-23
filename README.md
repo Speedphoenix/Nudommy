@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/Speedphoenix/Nudommy.svg?branch=master)](https://travis-ci.org/Speedphoenix/Nudommy)
 [![HitCount](http://hits.dwyl.io/Speedphoenix/Nudommy.svg)](http://hits.dwyl.io/Speedphoenix/Nudommy)
 [![Maintainability](https://api.codeclimate.com/v1/badges/01e1c52cd9187e7b138a/maintainability)](https://codeclimate.com/github/Speedphoenix/Nudommy/maintainability)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 A mostly-back node academic project
 
@@ -160,17 +162,17 @@ Also note that this system with collections may not be the traditional use of me
 ### Metrics routes
 
 All routes below return http 401 is the user is not authenticated, and 404 if the specified collection or timestamp does not exist.  
-Only metrics assiciated with the currently logged in user can be fetched
+Only metrics associated with the currently logged in user can be fetched
 
 |*METHOD*:Route|Description|Parameters|Request body|
-|--|--|--|--|
-|*GET*:`/metrics/`|Gives all the current user's metrics (see [Metrics](#metrics) for an example response.|||
-|*GET*:`/metrics/:colName`|Gives the current user's metrics that are part of a collection|`colName`: The name of the collection to fetch||
-|*GET*:`/metrics/:colName/:timestamp`|Gives a single metric|`colName`: The name of the collection the metric is in, `timestamp`: The timestamp of the metric||
-|*POST*:`/metrics/:colName`|Creates metrics inside collection `colName`||A JSON array of metrics|
-|*PUT*:`/metrics/:colName/:timestamp`|Updates a metric's value. Note that the timestamp cannot be directly modified||JSON with a single field `value`. `value` must be a number.|
-|*DELETE*:`/metrics/:colName`|Deletes all metrics belonging to collection `colName`|||
-|*DELETE*:`/metrics/:colName/:timestamp`|Deletes one specific metric|||
+|---------------------------------------|--|--|--|
+|*GET*:`/metrics/`                      |Gives all the current user's metrics (see [Metrics](#metrics) for an example response.|||
+|*GET*:`/metrics/:colName`              |Gives the current user's metrics that are part of a collection|`colName`: The name of the collection to fetch||
+|*GET*:`/metrics/:colName/:timestamp`   |Gives a single metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
+|*POST*:`/metrics/:colName`             |Creates metrics inside collection `colName`|`colName`: The name of the collection in which to create the metrics|A JSON array of metrics|
+|*PUT*:`/metrics/:colName/:timestamp`   |Updates a metric's value. Note that the timestamp cannot be directly modified|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric|JSON with a single field `value`. `value` must be a number.|
+|*DELETE*:`/metrics/:colName`           |Deletes all metrics belonging to collection `colName`|`colName`: The name of the collection to delete||
+|*DELETE*:`/metrics/:colName/:timestamp`|Deletes one specific metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
 
 # Miscellaneous
 
