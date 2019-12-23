@@ -15,9 +15,13 @@ describe('Metrics', function () {
     dbMet.closeDB();
   });
 
-  describe('#get', function () {
+  describe('#getOne', function () {
     it('should get empty array on non existing group', function (done) {
-      dbMet.getOne("0", function (err: Error | null, result: Metric[]) {
+      dbMet.getOne(
+        'someuser',
+        '0',
+        '2013-11-04 14:00 UTC',
+        function (err: Error | null, result: Metric[]) {
         expect(err).to.be.null;
         expect(result).to.not.be.undefined;
         expect(result).to.be.empty;
@@ -28,13 +32,34 @@ describe('Metrics', function () {
     it('should get a saved value', function (done) {
       let metrics: Metric[] = [];
       metrics.push(new Metric('1', 10));
-      dbMet.save('kima', metrics, function (err: Error | null) {
-        dbMet.getOne('kima', function (err: Error | null, result: Metric[]) {
+      dbMet.save('someuser', 'kim', metrics, function (err: Error | null) {
+        dbMet.getOne(
+          'someuser',
+          'kim',
+          '1',
+          function (err: Error | null, result: Metric[]) {
           expect(err).to.be.null;
           expect(result).to.not.be.undefined;
           if (result) {
             expect(result[0].value).to.equal(10);
           }
+          done();
+        });
+      });
+    });
+
+    it('should get an empty array for a different user', function (done) {
+      let metrics: Metric[] = [];
+      metrics.push(new Metric('1', 10));
+      dbMet.save('someuser', 'kim', metrics, function (err: Error | null) {
+        dbMet.getOne(
+          'someotheruser',
+          'kim',
+          '1',
+          function (err: Error | null, result: Metric[]) {
+          expect(err).to.be.null;
+          expect(result).to.not.be.undefined;
+          expect(result).to.be.empty;
           done();
         });
       });
