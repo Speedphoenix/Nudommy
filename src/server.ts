@@ -158,9 +158,10 @@ app.put('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
     req.params.timestamp,
     req.body.value,
     (err: Error | null) => {
-    if (err) res.status(404).send();
-    else res.status(200).send();
-  });
+      if (err) res.status(404).send();
+      else res.status(200).send();
+    }
+  );
 });
 
 app.get('/metrics/', authCheck, (req: any, res: any) => {
@@ -190,13 +191,14 @@ app.get('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
     req.params.colName,
     req.params.timestamp,
     (err: Error | null, result: any) => {
-    if (err) throw err;
-    if (!Array.isArray(result) || !result.length) {
-      res.status(404).send();
-    } else {
-      res.json(result);
+      if (err) throw err;
+      if (!Array.isArray(result) || !result.length) {
+        res.status(404).send();
+      } else {
+        res.json(result);
+      }
     }
-  });
+  );
 });
 
 // deletes one metric
@@ -206,9 +208,10 @@ app.delete('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
     req.params.colName,
     req.params.timestamp,
     (err: Error | null, msg?: string) => {
-    if (err) throw err;
-    res.status(200).send(msg);
-  });
+      if (err) throw err;
+      res.status(200).send(msg);
+    }
+  );
 });
 
 app.listen(port, (err: Error) => {

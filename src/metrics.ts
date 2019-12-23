@@ -114,7 +114,7 @@ export class MetricsHandler {
       });
   }
 
-  public deleteOne(
+  public deleteOne (
     username: string | undefined,
     metricCol: string,
     timestamp: string | undefined,
