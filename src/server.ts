@@ -144,52 +144,70 @@ app.get(
   }
 );
 
-app.get(
-  '/hello',
-  (req: any, res: any) => res.render('hello.ejs', {name: false})
-);
-
-app.get(
-  '/hello/:name',
-  (req: any, res: any) => res.render('hello.ejs', {name: req.params.name})
-);
-
-app.post('/metrics/:id', (req: any, res: any) => {
-  dbMet.save(req.params.id, req.body, (err: Error | null) => {
+app.post('/metrics/:id', authCheck, (req: any, res: any) => {
+  dbMet.save(req.session.user, req.params.id, req.body, (err: Error | null) => {
     if (err) throw err;
     res.status(200).send();
   })
 });
 
-app.get('/metrics/', (req: any, res: any) => {
-  dbMet.getAll((err: Error | null, result: any) => {
+app.put('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
+  dbMet.updateOne(
+    req.session.user,
+    req.params.colName,
+    req.params.timestamp,
+    req.body.value,
+    (err: Error | null) => {
+    if (err) res.status(404).send();
+    else res.status(200).send();
+  });
+});
+
+app.get('/metrics/', authCheck, (req: any, res: any) => {
+  dbMet.getAllFromUser(req.session.user, (err: Error | null, result: any) => {
     if (err) throw err;
     res.json(result);
     // res.end();
   });
 });
 
-app.get('/metrics/:id', (req: any, res: any) => {
-  dbMet.getOne(req.params.id, (err: Error | null, result: any) => {
+// gives all that match the metric collection
+app.get('/metrics/:colName', authCheck, (req: any, res: any) => {
+  dbMet.getAllFromUser(req.session.user, (err: Error | null, result: any) => {
     if (err) throw err;
-    res.json(result);
+    if (!(req.params.colName in result)) {
+      res.status(404).send();
+    } else {
+      res.json(result[req.params.colName]);
+    }
   });
 });
 
-app.delete('/metrics/:id', (req: any, res: any) => {
-  dbMet.deleteOne(req.params.id, (err: Error | null, msg?: string) => {
+// gives one metric
+app.get('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
+  dbMet.getOne(
+    req.session.user,
+    req.params.colName,
+    req.params.timestamp,
+    (err: Error | null, result: any) => {
+    if (err) throw err;
+    if (!Array.isArray(result) || !result.length) {
+      res.status(404).send();
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+// deletes one metric
+app.delete('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
+  dbMet.deleteOne(
+    req.session.user,
+    req.params.colName,
+    req.params.timestamp,
+    (err: Error | null, msg?: string) => {
     if (err) throw err;
     res.status(200).send(msg);
-  });
-});
-
-// this is obsolete and should be removed
-app.get('/metrics.json', (req: any, res: any) => {
-  MetricsHandler.get((err: Error | null, result?: any) => {
-    if (err) {
-      throw err;
-    }
-    res.json(result);
   });
 });
 
