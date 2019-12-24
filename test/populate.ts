@@ -72,7 +72,7 @@ const populate = () => {
       metricsCount += newmetCount;
     }
     console.log(`Created user ${value.username} `
-      + `(password is '${value.password}) `
+      + `(password is '${value.password}') `
       + `with ${metricsCount} metrics collections `
       + `(for a total of ${metricsCount} metrics)`
     );
@@ -82,7 +82,7 @@ const populate = () => {
   // Add a user without metrics to serve as an example
   dbUser.saveFromForm(emptyUserToAdd, (err: Error | null) => {});
   console.log(`Created user ${emptyUserToAdd.username} `
-    + `(password is '${emptyUserToAdd.password}) `
+    + `(password is '${emptyUserToAdd.password}') `
     + `without any metrics`
   );
 }

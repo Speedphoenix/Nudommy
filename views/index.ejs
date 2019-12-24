@@ -27,10 +27,21 @@
       $('#show-metrics').click((e) => {
         e.preventDefault();
         $.getJSON("/metrics", {}, (data) => {
+          /*
           const content = data.map(d => {
             return 'timestamp: ' + d.timestamp + ', value: ' + d.value + '';
           });
           $('#metrics').append(content.join("\n"));
+          */
+          console.log(data);
+        });
+        $.ajax({
+          url: '/metrics',
+          type: 'GET',
+          success: (data, textStatus, xhr) => {
+            console.log("hey");
+            console.log(data);
+          },
         });
       });
     </script>

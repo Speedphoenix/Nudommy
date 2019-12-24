@@ -55,7 +55,7 @@ const authCheckBlock = function (req: any, res: any, next: any) {
 
 
 const correctUser = function (req: any, res: any, next: any) {
-  if (!req.session.loggedIn || !userHasAccess(req.session.user, req.params.username))
+  if (!req.session.loggedIn || !userHasAccess(req.session.user.username, req.params.username))
     res.status(403).send("Operations to this user are not permitted");
   else {
     next();
@@ -72,8 +72,6 @@ authRouter.get('/signup', (req: any, res: any) => {
 });
 
 authRouter.get('/logout', logUserOut, (req: any, res: any) => {
-  delete req.session.loggedIn;
-  delete req.session.user;
   res.redirect('/login');
 });
 
@@ -113,7 +111,7 @@ userRouter.get('/:username', (req: any, res: any, next: any) => {
     if (err || result === undefined) {
       res.status(404).send("user not found");
     } else {
-      if (!req.session.loggedIn || !userHasAccess(req.session.user, req.params.username))
+      if (!req.session.loggedIn || !userHasAccess(req.session.user.username, req.params.username))
         result.removePassword();
       res.status(200).json(result);
     }
@@ -137,7 +135,6 @@ userRouter.put('/:username', correctUser, (req: any, res: any, next: any) => {
 
 // To delete a user
 userRouter.delete('/:username', correctUser, logUserOut, (req: any, res: any, next: any) => {
-  console.log("inside the delete");
   dbUser.delete(req.body.username, function (err: Error | null) {
     if (!err) {
      res.status(404).send("user does not exist");
@@ -159,7 +156,7 @@ app.get(
 
 // Gives all the user's metrics
 metRouter.get('/', authCheckBlock, (req: any, res: any) => {
-  dbMet.getAllFromUser(req.session.user, (err: Error | null, result: any) => {
+  dbMet.getAllFromUser(req.session.user.username, (err: Error | null, result: any) => {
     if (err) throw err;
     res.json(result);
     // res.end();
@@ -168,7 +165,7 @@ metRouter.get('/', authCheckBlock, (req: any, res: any) => {
 
 // Gives all metrics that match the metric collection
 metRouter.get('/:colName', authCheckBlock, (req: any, res: any) => {
-  dbMet.getAllFromUser(req.session.user, (err: Error | null, result: any) => {
+  dbMet.getAllFromUser(req.session.user.username, (err: Error | null, result: any) => {
     if (err) throw err;
     if (!(req.params.colName in result)) {
       res.status(404).send();
@@ -181,7 +178,7 @@ metRouter.get('/:colName', authCheckBlock, (req: any, res: any) => {
 // Gives one metric
 metRouter.get('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
   dbMet.getOne(
-    req.session.user,
+    req.session.user.username,
     req.params.colName,
     req.params.timestamp,
     (err: Error | null, result: any) => {
@@ -197,7 +194,7 @@ metRouter.get('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
 
 // To create metrics (must give a metrics array in the request body)
 metRouter.post('/:colName', authCheckBlock, (req: any, res: any) => {
-  dbMet.save(req.session.user, req.params.colName, req.body, (err: Error | null) => {
+  dbMet.save(req.session.user.username, req.params.colName, req.body, (err: Error | null) => {
     if (err) throw err;
     res.status(200).send();
   })
@@ -207,7 +204,7 @@ metRouter.post('/:colName', authCheckBlock, (req: any, res: any) => {
 // To change the timestamp, delete the metric and create it again
 metRouter.put('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
   dbMet.updateOne(
-    req.session.user,
+    req.session.user.username,
     req.params.colName,
     req.params.timestamp,
     req.body.value,
@@ -221,7 +218,7 @@ metRouter.put('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
 // Deletes all metrics in a collection
 metRouter.delete('/:colName', authCheckBlock, (req: any, res: any) => {
   dbMet.deleteCol(
-    req.session.user,
+    req.session.user.username,
     req.params.colName,
     (err: Error | null, msg?: string) => {
       if (err) throw err;
@@ -233,7 +230,7 @@ metRouter.delete('/:colName', authCheckBlock, (req: any, res: any) => {
 // Deletes one metric
 metRouter.delete('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
   dbMet.deleteOne(
-    req.session.user,
+    req.session.user.username,
     req.params.colName,
     req.params.timestamp,
     (err: Error | null, msg?: string) => {
