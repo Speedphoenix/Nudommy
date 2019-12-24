@@ -166,13 +166,13 @@ Only metrics associated with the currently logged in user can be fetched
 
 |*METHOD*:Route|Description|Parameters|Request body|
 |---------------------------------------|--|--|--|
-|*GET*:`/metrics/`                      |Gives all the current user's metrics (see [Metrics](#metrics) for an example response.|||
-|*GET*:`/metrics/:colName`              |Gives the current user's metrics that are part of a collection|`colName`: The name of the collection to fetch||
-|*GET*:`/metrics/:colName/:timestamp`   |Gives a single metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
-|*POST*:`/metrics/:colName`             |Creates metrics inside collection `colName`|`colName`: The name of the collection in which to create the metrics|A JSON array of metrics|
-|*PUT*:`/metrics/:colName/:timestamp`   |Updates a metric's value. Note that the timestamp cannot be directly modified|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric|JSON with a single field `value`. `value` must be a number.|
-|*DELETE*:`/metrics/:colName`           |Deletes all metrics belonging to collection `colName`|`colName`: The name of the collection to delete||
-|*DELETE*:`/metrics/:colName/:timestamp`|Deletes one specific metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
+|*GET*: `/metrics/`                      |Gives all the current user's metrics (see [Metrics](#metrics) for an example response.|||
+|*GET*: `/metrics/:colName`              |Gives the current user's metrics that are part of a collection|`colName`: The name of the collection to fetch||
+|*GET*: `/metrics/:colName/:timestamp`   |Gives a single metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
+|*POST*: `/metrics/:colName`             |Creates metrics inside collection `colName`|`colName`: The name of the collection in which to create the metrics|A JSON array of metrics|
+|*PUT*: `/metrics/:colName/:timestamp`   |Updates a metric's value. Note that the timestamp cannot be directly modified|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric|JSON with a single field `value`. `value` must be a number.|
+|*DELETE*: `/metrics/:colName`           |Deletes all metrics belonging to collection `colName`|`colName`: The name of the collection to delete||
+|*DELETE*: `/metrics/:colName/:timestamp`|Deletes one specific metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
 
 # Miscellaneous
 
