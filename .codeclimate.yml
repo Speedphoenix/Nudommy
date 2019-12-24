@@ -3,3 +3,4 @@ exclude_patterns:
 - "public/**/bootstrap*"
 - "public/js/jquery*"
 - "dest/"
+- "test/"
