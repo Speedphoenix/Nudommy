@@ -122,21 +122,21 @@ For example, the `/metrics` *GET* API endpoint will return a response that looks
 {
 	"someCollection": [
 		{
-			"timestamp": "2013-11-04 14:00 UTC",
+			"timestamp": "1577836800",
 			"value": 1
 		},
 		{
-			"timestamp": "2013-11-04 14:05 UTC",
+			"timestamp": "1577836801",
 			"value": 2
 		},
 		{
-			"timestamp": "2013-11-04 14:10 UTC",
+			"timestamp": "1577836802",
 			"value": 3
 		}
 	],
 	"someOtherCollection": [
 		{
-			"timestamp": "2013-11-05 14:00 UTC",
+			"timestamp": "1598000000",
 			"value": 10
 		},
 	]
