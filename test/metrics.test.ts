@@ -68,4 +68,59 @@ describe('Metrics', function () {
       });
     });
   });
+
+  describe('#getAll', function () {
+    it('should find all new metrics', function (done) {
+      const met1 = new Metric('1', 10);
+      const met2 = new Metric('2', 11);
+      let metrics: Metric[] = [ met1, met2 ];
+      dbMet.save('someuser', 'kim', metrics, function (err: Error | null) {
+        dbMet.getAllFromUser('someuser', (err: Error | null, result: any) => {
+          expect(err).to.be.null;
+          expect(result.kim).to.not.be.empty;
+          expect(result.kim).to.eql([ met1, met2 ]);
+          expect(result).to.eql({ kim: [ met1, met2 ] });
+          done();
+        });
+      });
+    });
+
+    it("should only find one user's metrics", function (done) {
+      const met1 = new Metric('1', 10);
+      const met2 = new Metric('2', 11);
+      let metrics: Metric[] = [ met1, met2 ];
+      let othermetrics1: Metric[] = [ new Metric('3', 13) ];
+      let othermetrics2: Metric[] = [ new Metric('4', 14) ];
+      dbMet.save('someother', 'kim', othermetrics1, function (err: Error | null) {});
+      dbMet.save('someother', 'kim2', othermetrics2, function (err: Error | null) {});
+      dbMet.save('someuser', 'kim', metrics, function (err: Error | null) {
+        dbMet.getAllFromUser('someuser', (err: Error | null, result: any) => {
+          expect(err).to.be.null;
+          expect(result.kim).to.not.be.empty;
+          expect(result.kim).to.eql([ met1, met2 ]);
+            expect(result).to.eql({ kim: [ met1, met2 ] });
+          done();
+        });
+      });
+    });
+  });
+
+  describe('#deleteOne', function () {
+    it('should not find a deleted metric', function (done) {
+      const met1 = new Metric('1', 10);
+      const met2 = new Metric('2', 11);
+      let metrics: Metric[] = [ met1, met2 ];
+      dbMet.save('someuser', 'kim', metrics, function (err: Error | null) {
+        dbMet.deleteOne('someuser', 'kim', '2', (err: Error | null, msg?: string) => {
+          dbMet.getAllFromUser('someuser', (err: Error | null, result: any) => {
+            expect(err).to.be.null;
+            expect(result.kim).to.not.be.empty;
+            expect(result.kim).to.eql([ met1 ]);
+            expect(result).to.eql({ kim: [ met1 ] });
+            done();
+          });
+        });
+      });
+    });
+  });
 });

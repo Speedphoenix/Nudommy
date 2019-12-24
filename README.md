@@ -58,6 +58,8 @@ You can populate the database with dummy values using
 npm run populate
 ```
 
+Note that the heroku instance is not pre populated in this way.
+
 # Deploying to Heroku
 
 This project is already hosted on a Heroku app [here](https://nudommy.herokuapp.com/).
