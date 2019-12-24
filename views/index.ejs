@@ -67,12 +67,19 @@
               $('#metrics').append(displays);
               let values_array = [];
               let timestamps_array = [];
+              let dates= [];
+              let years= [];
 
 
               Object.keys(data[el]).forEach((pair)=> {
                 timestamps_array.push(data[el][pair].timestamp);
                 values_array.push(data[el][pair].value);
+                dates.push(new Date(1000*data[el][pair].value));
+                years.push((new Date(1000*data[el][pair].value)).getHours)
+                console.log((new Date(1000*data[el][pair].value)).getHours);
               });
+              console.log(dates[0]);
+
 
               var ctx = document.getElementById('myChart_'+el).getContext('2d');
               var linechart = new Chart(ctx, {
@@ -81,7 +88,7 @@
                   labels: timestamps_array,
                   datasets: [{
                      data: values_array,
-                     label: 'random value',
+                     label: "Metrics : " +el,
                      backgroundColor: [
                         'rgba(255, 99, 30, 0.7)'
                       ]
