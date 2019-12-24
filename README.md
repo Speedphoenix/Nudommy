@@ -108,20 +108,71 @@ This project is made to transpile/build and execute its tests on every push, and
 Latest build information can be found at [travis-ci.org/Speedphoenix/Nudommy](https://travis-ci.org/Speedphoenix/Nudommy).  
 See [`.travis.yml`](.travis.yml) for more information.
 
+# Metrics
+
+The metrics in Nudommy (which can be used via the API on `/metrics` and on the index page `/`) follow a system where
+
+- A metric is a numerical value attached to a timestamp
+- Metrics are bound to a user and can't be accessed by a different user
+- Metrics are organized in collections: every collection groups metrics under one name.
+> Metric collections can be fully separate to show different data.
+
+For example, the `/metrics` *GET* API endpoint will return a response that looks like this:
+```json
+{
+	"someCollection": [
+		{
+			"timestamp": "2013-11-04 14:00 UTC",
+			"value": 1
+		},
+		{
+			"timestamp": "2013-11-04 14:05 UTC",
+			"value": 2
+		},
+		{
+			"timestamp": "2013-11-04 14:10 UTC",
+			"value": 3
+		}
+	],
+	"someOtherCollection": [
+		{
+			"timestamp": "2013-11-05 14:00 UTC",
+			"value": 10
+		},
+	]
+}
+```
+Note that the timestamps may be changed to unix timestamps  
+Also note that this system with collections may not be the traditional use of metrics, and only allows for one metric at a certain timestamp within a collections.  
+
 # http Routes
 
 |*METHOD*:Route|Description|Parameters|
 |--|--|--|
-|*GET*:`/`|The front page of Nudommy||
-|*GET*:`/login`|The login page||
+|*GET*:`/`|The front page of Nudommy.||
+|*GET*:`/login`|The login page.||
 |*POST*:`/login`|The destination of the login form. Will redirect to `/` on success, will stay on `/login` on failure.||
-|*GET*:`/signup`|The signup page. Note that the signup form will redirect to `/login` and log you in automatically on success||
-|*GET*:`/logout`|Will log the current session out and redirect to `/login`||
+|*GET*:`/signup`|The signup page. Note that the signup form will redirect to `/login` and log you in automatically on success.||
+|*GET*:`/logout`|Will log the current session out and redirect to `/login`.||
 |*GET*:`/user/:username`|Returns information about a user. Note that the password is only given if that user is currently logged in.|`username`: The user to be fetched|
-|*POST*:`/user`|Creates a user, or returns status code `409` if it already exists||
-|*PUT*:`/user/:username`|Updates the information about a user, or returns status code 403 if the current user does not have permission to change it.|`username`: The user to be updated|
+|*POST*:`/user`|Creates a user, or returns status code `409` if it already exists.||
+|*PUT*:`/user/:username`|Updates the information about a user, or returns status code 403 if the current user does not have permission to change it. Note that the username cannot be changed after the user is created.|`username`: The user to be updated|
 |*DELETE*:`/user/:username`|Deletes a user and logs the current user out, or returns status code 403 if the current user does not have permission to change it.|`username`: The user to be deleted|
-|metrics...|||
+
+### Metrics routes
+
+All routes below return http 401 is the user is not authenticated, and 404 if the specified collection or timestamp does not exist.  
+Only metrics associated with the currently logged in user can be fetched
+
+|*METHOD*:Route|Description|Parameters|Request body|
+|---------------------------------------|--|--|--|
+|*GET*: `/metrics/`                      |Gives all the current user's metrics (see [Metrics](#metrics) for an example response.|||
+|*GET*: `/metrics/:colName`              |Gives the current user's metrics that are part of a collection|`colName`: The name of the collection to fetch||
+|*GET*: `/metrics/:colName/:timestamp`   |Gives a single metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
+|*POST*: `/metrics/:colName`             |Creates metrics inside collection `colName`|`colName`: The name of the collection in which to create the metrics|A JSON array of metrics|
+|*PUT*: `/metrics/:colName/:timestamp`   |Updates a metric's value. Note that the timestamp cannot be directly modified|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric|JSON with a single field `value`. `value` must be a number.|
+|*DELETE*: `/metrics/:colName`           |Deletes all metrics belonging to collection `colName`|`colName`: The name of the collection to delete||
+|*DELETE*: `/metrics/:colName/:timestamp`|Deletes one specific metric|`colName`: The name of the collection the metric is in<br /><br />`timestamp`: The timestamp of the metric||
 
 # Miscellaneous
 

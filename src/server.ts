@@ -12,11 +12,11 @@ const port: string = process.env.PORT || '8096';
 const LevelStore = levelSession(session);
 
 const dbMet: MetricsHandler = new MetricsHandler('./db/metrics');
-
 const dbUser: UserHandler = new UserHandler('./db/users');
 
 const userRouter = express.Router();
 const authRouter = express.Router();
+const metRouter = express.Router();
 
 app.use(session({
   secret: process.env.SESSIONSECRET || 'my phrase is very secret',
@@ -45,6 +45,15 @@ const authCheck = function (req: any, res: any, next: any) {
   } else res.redirect('/login');
 }
 
+const authCheckBlock = function (req: any, res: any, next: any) {
+  if (req.session.loggedIn) {
+    next();
+  } else {
+    res.status(401).send("You must be logged in to access this");
+  }
+}
+
+
 const correctUser = function (req: any, res: any, next: any) {
   if (!req.session.loggedIn || !userHasAccess(req.session.user, req.params.username))
     res.status(403).send("Operations to this user are not permitted");
@@ -68,6 +77,7 @@ authRouter.get('/logout', logUserOut, (req: any, res: any) => {
   res.redirect('/login');
 });
 
+// The target of the login form
 authRouter.post('/login', (req: any, res: any, next: any) => {
   dbUser.get(req.body.username, (err: Error | null, result?: User) => {
     // if (err) next(err);
@@ -83,7 +93,7 @@ authRouter.post('/login', (req: any, res: any, next: any) => {
 
 app.use(authRouter);
 
-
+// To create a user
 userRouter.post('/', (req: any, res: any, next: any) => {
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
     if (!err || result !== undefined) {
@@ -97,6 +107,7 @@ userRouter.post('/', (req: any, res: any, next: any) => {
   });
 });
 
+// To get the user's info
 userRouter.get('/:username', (req: any, res: any, next: any) => {
   dbUser.get(req.params.username, function (err: Error | null, result?: User) {
     if (err || result === undefined) {
@@ -109,6 +120,7 @@ userRouter.get('/:username', (req: any, res: any, next: any) => {
   });
 });
 
+// To update the user's info (can't change the username)
 userRouter.put('/:username', correctUser, (req: any, res: any, next: any) => {
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
     if (!err || result === undefined) {
@@ -123,6 +135,7 @@ userRouter.put('/:username', correctUser, (req: any, res: any, next: any) => {
   });
 });
 
+// To delete a user
 userRouter.delete('/:username', correctUser, logUserOut, (req: any, res: any, next: any) => {
   console.log("inside the delete");
   dbUser.delete(req.body.username, function (err: Error | null) {
@@ -144,26 +157,8 @@ app.get(
   }
 );
 
-app.post('/metrics/:id', authCheck, (req: any, res: any) => {
-  dbMet.save(req.session.user, req.params.id, req.body, (err: Error | null) => {
-    if (err) throw err;
-    res.status(200).send();
-  })
-});
-
-app.put('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
-  dbMet.updateOne(
-    req.session.user,
-    req.params.colName,
-    req.params.timestamp,
-    req.body.value,
-    (err: Error | null) => {
-    if (err) res.status(404).send();
-    else res.status(200).send();
-  });
-});
-
-app.get('/metrics/', authCheck, (req: any, res: any) => {
+// Gives all the user's metrics
+metRouter.get('/', authCheckBlock, (req: any, res: any) => {
   dbMet.getAllFromUser(req.session.user, (err: Error | null, result: any) => {
     if (err) throw err;
     res.json(result);
@@ -171,8 +166,8 @@ app.get('/metrics/', authCheck, (req: any, res: any) => {
   });
 });
 
-// gives all that match the metric collection
-app.get('/metrics/:colName', authCheck, (req: any, res: any) => {
+// Gives all metrics that match the metric collection
+metRouter.get('/:colName', authCheckBlock, (req: any, res: any) => {
   dbMet.getAllFromUser(req.session.user, (err: Error | null, result: any) => {
     if (err) throw err;
     if (!(req.params.colName in result)) {
@@ -183,33 +178,72 @@ app.get('/metrics/:colName', authCheck, (req: any, res: any) => {
   });
 });
 
-// gives one metric
-app.get('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
+// Gives one metric
+metRouter.get('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
   dbMet.getOne(
     req.session.user,
     req.params.colName,
     req.params.timestamp,
     (err: Error | null, result: any) => {
-    if (err) throw err;
-    if (!Array.isArray(result) || !result.length) {
-      res.status(404).send();
-    } else {
-      res.json(result);
+      if (err) throw err;
+      if (!Array.isArray(result) || !result.length) {
+        res.status(404).send();
+      } else {
+        res.json(result);
+      }
     }
-  });
+  );
 });
 
-// deletes one metric
-app.delete('/metrics/:colName/:timestamp', authCheck, (req: any, res: any) => {
+// To create metrics (must give a metrics array in the request body)
+metRouter.post('/:colName', authCheckBlock, (req: any, res: any) => {
+  dbMet.save(req.session.user, req.params.colName, req.body, (err: Error | null) => {
+    if (err) throw err;
+    res.status(200).send();
+  })
+});
+
+// To edit the value of a metric.
+// To change the timestamp, delete the metric and create it again
+metRouter.put('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
+  dbMet.updateOne(
+    req.session.user,
+    req.params.colName,
+    req.params.timestamp,
+    req.body.value,
+    (err: Error | null) => {
+      if (err) res.status(404).send();
+      else res.status(200).send();
+    }
+  );
+});
+
+// Deletes all metrics in a collection
+metRouter.delete('/:colName', authCheckBlock, (req: any, res: any) => {
+  dbMet.deleteCol(
+    req.session.user,
+    req.params.colName,
+    (err: Error | null, msg?: string) => {
+      if (err) throw err;
+      res.status(200).send(msg);
+    }
+  );
+});
+
+// Deletes one metric
+metRouter.delete('/:colName/:timestamp', authCheckBlock, (req: any, res: any) => {
   dbMet.deleteOne(
     req.session.user,
     req.params.colName,
     req.params.timestamp,
     (err: Error | null, msg?: string) => {
-    if (err) throw err;
-    res.status(200).send(msg);
-  });
+      if (err) throw err;
+      res.status(200).send(msg);
+    }
+  );
 });
+
+app.use('/metrics', metRouter);
 
 app.listen(port, (err: Error) => {
   if (err) {

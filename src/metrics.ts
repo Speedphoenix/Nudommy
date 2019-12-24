@@ -11,6 +11,10 @@ export class Metric {
     this.timestamp = ts;
     this.value = v;
   }
+
+  public getFullKey(username: string, collection: string) {
+    return `metric:${username}:${collection}:${this.timestamp}`;
+  }
 };
 
 export class MetricsHandler {
@@ -24,11 +28,12 @@ export class MetricsHandler {
     this.db.close();
   }
 
-  public save(
+  public save = (
     username: string,
     metricCol: string,
     metrics: Metric[],
-    callback: (error: Error | null) => void) {
+    callback: (error: Error | null) => void
+  ) => {
     const stream = WriteStream(this.db);
     stream.on('error', callback);
     stream.on('close', callback);
@@ -38,12 +43,13 @@ export class MetricsHandler {
     stream.end();
   }
 
-  public updateOne(
+  public updateOne = (
     username: string | undefined,
     metricCol: string,
     timestamp: string,
     newValue: number,
-    callback: (error: Error | null) => void) {
+    callback: (error: Error | null) => void
+  ) => {
     const fullkey = `metric:${username}:${metricCol}:${timestamp}`;
     this.db.get(fullkey, (err: Error | null, data: any) => {
       if (err || data === undefined) callback(err);
@@ -84,11 +90,12 @@ export class MetricsHandler {
   }
 
   // also gives the full key of that entry in the db
-  public getOne(
+  public getOne = (
     username: string | undefined,
     metricCol: string,
     timestamp: string | undefined,
-    callback: (error: Error | null, result: any, fullKey?: string) => void) {
+    callback: (error: Error | null, result: any, fullKey?: string) => void
+  ) => {
     let metrics: Metric[] = [];
     let fullKey: string | undefined;
     this.db.createReadStream()
@@ -114,23 +121,46 @@ export class MetricsHandler {
       });
   }
 
-  public deleteOne(
+  public deleteOne = (
     username: string | undefined,
     metricCol: string,
     timestamp: string | undefined,
-    callback: (error: Error | null, msg?: string) => void) {
+    callback: (error: Error | null, msg?: string) => void
+  ) => {
     this.getOne(
       username,
       metricCol,
       timestamp,
       (err: Error | null, result: Metric[], fullKey?: string) => {
-      if (err) callback(err);
-      if (fullKey) {
-		this.db.del(fullKey);
-		callback(null, 'success');
-	  } else {
-		callback(null, 'not found');
-	  }
-    });
+        if (err) callback(err);
+        if (fullKey) {
+          this.db.del(fullKey);
+          callback(null, 'success');
+        } else {
+          callback(null, 'not found');
+        }
+      }
+    );
+  }
+
+  public deleteCol = (
+    username: string,
+    metricCol: string,
+    callback: (error: Error | null, msg?: string) => void
+  ) => {
+    this.getAllFromUser(
+      username,
+      (err: Error | null, result: Metric[]) => {
+        if (err) callback(err);
+        else if (!(metricCol in result)) {
+          callback(null, 'not found');
+        } else {
+          result.forEach((m: Metric) => {
+            this.db.del(m.getFullKey(username, metricCol));
+          });
+          callback(null, 'success');
+        }
+      }
+    );
   }
 };
