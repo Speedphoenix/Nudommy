@@ -41,27 +41,7 @@
           url: '/metrics',
           type: 'GET',
           success: (data, textStatus, xhr) => {
-            //console.log("hey");
-            //console.log(data);
-            // Object.keys(data).forEach((el)=> {
-            //   data[el].map((val, index) => {console.log(val);});
-            // });
-////// ugly tables
-            // Object.keys(data).forEach((el)=> {
-            //   let displays ='<table style="text-align: center;">';
-            //
-            //   console.log(data[el]);
-            //   Object.keys(data[el]).forEach((pair)=> {
-            //     displays += "<tr>";
-            //     displays += "<td>";
-            //     displays += " " + data[el][pair].timestamp +"</td><td>   value : "+ data[el][pair].value;
-            //     displays += "</td>";
-            //     displays += "</tr>";
-            //   });
-            //   displays += "</table><br><br><br>";
-            //   $('#metrics').append(displays);
-            // });
-/////
+
             Object.keys(data).forEach((el)=> {
               let displays ='<canvas id="myChart_'+ el+ '" width="450" height="400"></canvas>';
               $('#metrics').append(displays);
@@ -76,9 +56,9 @@
                 values_array.push(data[el][pair].value);
                 dates.push(new Date(1000*data[el][pair].value));
                 years.push((new Date(1000*data[el][pair].value)).getHours)
-                console.log((new Date(1000*data[el][pair].value)).getHours);
+                // console.log((new Date(1000*data[el][pair].value)).getHours);
               });
-              console.log(dates[0]);
+              // console.log(dates[0]);
 
 
               var ctx = document.getElementById('myChart_'+el).getContext('2d');
