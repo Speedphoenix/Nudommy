@@ -1,7 +1,7 @@
 import { LevelDB } from './leveldb';
 import WriteStream from 'level-ws';
 
-import { userHasAccess } from  './user';
+import { userHasAccess } from  './user';
 
 export class Metric {
   public timestamp: string;

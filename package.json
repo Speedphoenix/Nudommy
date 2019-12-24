@@ -8,7 +8,8 @@
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
     "start-prod": "node dest/server.js",
     "start": "./node_modules/.bin/ts-node src/server.ts",
-    "dev": "./node_modules/.bin/nodemon "
+    "dev": "./node_modules/.bin/nodemon ",
+    "populate": "./node_modules/.bin/ts-node test/populate.ts"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
     "chai": "^4.2.0",
+    "docker-names": "^1.1.1",
     "mocha": "^6.2.2",
     "nodemon": "^2.0.1",
     "ts-node": "^8.5.4",
