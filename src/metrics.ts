@@ -155,10 +155,17 @@ export class MetricsHandler {
         else if (!(metricCol in result)) {
           callback(null, 'not found');
         } else {
+          /*
           result.forEach((m: Metric) => {
             this.db.del(m.getFullKey(username, metricCol));
           });
           callback(null, 'success');
+          */
+          result.forEach((m: Metric) => {
+            this.db.del(m.getFullKey(username, metricCol));
+          });
+          callback(null, 'success');
+
         }
       }
     );

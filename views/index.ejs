@@ -42,7 +42,7 @@
             <select class="form-control" id="name_col">
             </select>
           </div>
-          <input class="form-control" type="text" placeholder="Input of metric">
+          <input class="form-control" id="metrics_input" type="number" placeholder="Input of metric" required>
           <br>
           <button class="btn btn-success center-block" id="add-metrics" >Add metrics</button>
         </form>
@@ -52,7 +52,7 @@
           <label for="metrics-set-name">ADD NEW SET OF METRICS METRICS</label>
           <input class="form-control" id="metrics-set-name" type="text" required placeholder="NAME OF NEW SET" >
           <br>
-          <button class="btn btn-success center-block" id="set-name" >Add metrics</button>
+          <button class="btn btn-success center-block" id="create_set_metrics" >Add metrics</button>
         </form>
       </div>
     </div>
@@ -66,28 +66,11 @@
 
     <script type="text/javascript">
 
-
-      $('#set-name').click((e) => {
-        e.preventDefault();
-        let value = $('#metrics-set-name').val();
-        $.getJSON(("/metrics/:"+ value), {}, (data) => {});
-        $.ajax({
-          url: '/metrics/'+value,
-          type: 'GET',
-          success: function(){
-            console.log("created")
-          },
-        });
-      });
-
-
-
-
-
     //to fill the options
       let list_choices = document.getElementById("name_col");
+      let dropdown = document.getElementById("del_name_col");
 
-      $.getJSON("/metrics", {}, (data) => {});
+
       $.ajax({
         url: '/metrics',
         type: 'GET',
@@ -101,26 +84,6 @@
           });
         },
       });
-
-      $('#add-metrics').click((e) => {
-        e.preventDefault();
-        var selector  = document.getElementById('name_col');
-        var value = selector[selector.selectedIndex].value;
-        console.log(value);
-        $.ajax({
-          url: '/metrics/'+value,
-          type: 'POST',
-          success: function() {
-            console.log("added");
-          },
-        });
-      });
-
-
-    //to fill the options
-      let dropdown = document.getElementById("del_name_col");
-
-      $.getJSON("/metrics", {}, (data) => {});
       $.ajax({
         url: '/metrics',
         type: 'GET',
@@ -135,14 +98,66 @@
         },
       });
 
+      $('#add-metrics').click((e) => {
+        e.preventDefault();
+        var selector  = document.getElementById('name_col');
+        var value = selector[selector.selectedIndex].value;
+        let metrics_input = document.getElementById('metrics_input');
+        let url ='/metrics/'+value;
+        console.log(metrics_input.value);
+        $.ajax({
+          url: '/metrics/'+value,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify([
+            {
+            "timestamp": new Date().getTime(),
+            "value": metrics_input.value
+            },
+          ]),
+          success: (data, textStatus, xhr) => {
+            console.log(data);
+          },
+        });
+      });
+
+
+
+    $('#create_set_metrics').click((e) => {
+      e.preventDefault();
+      let value = $('#metrics-set-name').val();
+      $.ajax({
+        url: '/metrics/'+value,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify([
+          {
+          "timestamp": new Date().getTime(),
+          "value": 12
+          },
+          {
+          "timestamp": new Date().getTime(),
+          "value": 10
+          },
+        ]),
+        success: (data, textStatus, xhr) => {
+          console.log("");
+        },
+      });
+    });
+
+
+
       $('#del-metrics').click((e) => {
         e.preventDefault();
         var selector  = document.getElementById('del_name_col');
         var value = selector[selector.selectedIndex].value;
-        console.log(value);
         $.ajax({
           url: '/metrics/'+value,
-          type: 'GET',
+          type: 'DELETE',
+          async: false,
+          contentType: 'application/json',
+          timeout: 1000,
           success: function() {
             console.log("deleted");
           },
