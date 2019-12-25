@@ -104,7 +104,7 @@
         var value = selector[selector.selectedIndex].value;
         let metrics_input = document.getElementById('metrics_input');
         let url ='/metrics/'+value;
-        console.log(metrics_input.value);
+
         $.ajax({
           url: '/metrics/'+value,
           type: 'POST',
@@ -153,9 +153,8 @@
         var selector  = document.getElementById('del_name_col');
         var value = selector[selector.selectedIndex].value;
         $.ajax({
-          url: '/metrics/'+value,
+          url: '/metrics/'+value+'/',
           type: 'DELETE',
-          async: false,
           contentType: 'application/json',
           timeout: 1000,
           success: function() {
@@ -167,15 +166,6 @@
 
       $('#show-metrics').click((e) => {
         e.preventDefault();
-        $.getJSON("/metrics", {}, (data) => {
-          /*
-          const content = data.map(d => {
-            return 'timestamp: ' + d.timestamp + ', value: ' + d.value + '';
-          });
-          $('#metrics').append(content.join("\n"));
-          */
-
-        });
         $.ajax({
           url: '/metrics',
           type: 'GET',
