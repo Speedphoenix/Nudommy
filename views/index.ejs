@@ -52,7 +52,7 @@
           <label for="metrics-set-name">ADD NEW SET OF METRICS METRICS</label>
           <input class="form-control" id="metrics-set-name" type="text" required placeholder="NAME OF NEW SET" >
           <br>
-          <button class="btn btn-success center-block" id="metrics-set-name" >Add metrics</button>
+          <button class="btn btn-success center-block" id="set-name" >Add metrics</button>
         </form>
       </div>
     </div>
@@ -66,6 +66,19 @@
 
     <script type="text/javascript">
 
+
+      $('#set-name').click((e) => {
+        e.preventDefault();
+        let value = $('#metrics-set-name').val();
+        $.getJSON(("/metrics/:"+ value), {}, (data) => {});
+        $.ajax({
+          url: '/metrics/'+value,
+          type: 'GET',
+          success: function(){
+            console.log("created")
+          },
+        });
+      });
 
 
 
@@ -96,9 +109,9 @@
         console.log(value);
         $.ajax({
           url: '/metrics/'+value,
-          type: 'GET',
+          type: 'POST',
           success: function() {
-            console.log("deleted");
+            console.log("added");
           },
         });
       });
