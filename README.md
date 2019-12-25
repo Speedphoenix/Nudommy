@@ -58,7 +58,15 @@ You can populate the database with dummy values using
 npm run populate
 ```
 
-Note that the heroku instance is not pre populated in this way.
+### Created users include
+
+|Username|Password|Notes|
+|--|--|--|
+|exampleUser|examplePassword|Has random metrics|
+|exampleUser2|examplePassword2|Has random metrics|
+|someUser|somePassword|Does not have any metrics|
+
+There are also 4 other users with random usernames and metrics.
 
 # Deploying to Heroku
 
