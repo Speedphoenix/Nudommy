@@ -17,53 +17,162 @@
       </button>
     </div>
 
-    <div class="greetings">
+    <div class="greetings" style="text-align:center">
       <h1>Hello <%= name %></h1>
     </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <form id="form-del-metrics" method="post" >
+          <div class="form-group">
+            <label for="dele_name_col">DELETE METRICS</label>
+            <select class="form-control" id="del_name_col">
+            </select>
+          </div>
+          <div><br></div>
+          <br>
+          <button class="btn btn-success center-block" id="del-metrics" >Delete selected metrics</button>
+        </form>
+
+      </div>
+      <div class="col-md-4">
+        <form id="form-add-metrics" method="post" >
+          <div class="form-group">
+            <label for="name_col">ADD METRICS</label>
+            <select class="form-control" id="name_col">
+            </select>
+          </div>
+          <input class="form-control" id="metrics_input" type="number" placeholder="Input of metric" required>
+          <br>
+          <button class="btn btn-success center-block" id="add-metrics" >Add metrics</button>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <form id="form-add-set-metrics" method="post" >
+          <label for="metrics-set-name">ADD NEW SET OF METRICS METRICS</label>
+          <input class="form-control" id="metrics-set-name" type="text" required placeholder="NAME OF NEW SET" >
+          <br>
+          <button class="btn btn-success center-block" id="create_set_metrics" >Add metrics</button>
+        </form>
+      </div>
+    </div>
+
+
     <div class="col-md-6 col-md-offset-3">
-      <button class="btn btn-success" id="show-metrics">Show some metrics</button>
+      <button class="btn btn-success" id="show-metrics">Show/Actualize some metrics</button>
 
     </div>
     <div id="metrics"></div>
+
     <script type="text/javascript">
+
+    //to fill the options
+      let list_choices = document.getElementById("name_col");
+      let dropdown = document.getElementById("del_name_col");
+
+
+      $.ajax({
+        url: '/metrics',
+        type: 'GET',
+        success: (data, textStatus, xhr) => {
+          let i=0;
+          Object.keys(data).forEach((el)=> {
+            let choice = document.createElement("option");
+            choice.text = el;
+            choice.value = el;
+            list_choices.add(choice, list_choices[++i]);
+          });
+        },
+      });
+      $.ajax({
+        url: '/metrics',
+        type: 'GET',
+        success: (data, textStatus, xhr) => {
+          let i=0;
+          Object.keys(data).forEach((el)=> {
+            let choice = document.createElement("option");
+            choice.text = el;
+            choice.value = el;
+            dropdown.add(choice, dropdown[++i]);
+          });
+        },
+      });
+
+      $('#add-metrics').click((e) => {
+        e.preventDefault();
+        var selector  = document.getElementById('name_col');
+        var value = selector[selector.selectedIndex].value;
+        let metrics_input = document.getElementById('metrics_input');
+        let url ='/metrics/'+value;
+
+        $.ajax({
+          url: '/metrics/'+value,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify([
+            {
+            "timestamp": new Date().getTime(),
+            "value": metrics_input.value
+            },
+          ]),
+          success: (data, textStatus, xhr) => {
+            console.log(data);
+          },
+        });
+      });
+
+
+
+    $('#create_set_metrics').click((e) => {
+      e.preventDefault();
+      let value = $('#metrics-set-name').val();
+      $.ajax({
+        url: '/metrics/'+value,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify([
+          {
+          "timestamp": new Date().getTime(),
+          "value": 12
+          },
+          {
+          "timestamp": new Date().getTime(),
+          "value": 10
+          },
+        ]),
+        success: (data, textStatus, xhr) => {
+          console.log("");
+        },
+      });
+    });
+
+
+
+      $('#del-metrics').click((e) => {
+        e.preventDefault();
+        var selector  = document.getElementById('del_name_col');
+        var value = selector[selector.selectedIndex].value;
+        $.ajax({
+          url: '/metrics/'+value+'/',
+          type: 'DELETE',
+          contentType: 'application/json',
+          timeout: 1000,
+          success: function() {
+            console.log("deleted");
+          },
+        });
+      });
+
+
       $('#show-metrics').click((e) => {
         e.preventDefault();
-        $.getJSON("/metrics", {}, (data) => {
-          /*
-          const content = data.map(d => {
-            return 'timestamp: ' + d.timestamp + ', value: ' + d.value + '';
-          });
-          $('#metrics').append(content.join("\n"));
-          */
-          console.log(data);
-        });
         $.ajax({
           url: '/metrics',
           type: 'GET',
           success: (data, textStatus, xhr) => {
-            //console.log("hey");
-            //console.log(data);
-            // Object.keys(data).forEach((el)=> {
-            //   data[el].map((val, index) => {console.log(val);});
-            // });
-////// ugly tables
-            // Object.keys(data).forEach((el)=> {
-            //   let displays ='<table style="text-align: center;">';
-            //
-            //   console.log(data[el]);
-            //   Object.keys(data[el]).forEach((pair)=> {
-            //     displays += "<tr>";
-            //     displays += "<td>";
-            //     displays += " " + data[el][pair].timestamp +"</td><td>   value : "+ data[el][pair].value;
-            //     displays += "</td>";
-            //     displays += "</tr>";
-            //   });
-            //   displays += "</table><br><br><br>";
-            //   $('#metrics').append(displays);
-            // });
-/////
+            $(".graph").remove();
             Object.keys(data).forEach((el)=> {
-              let displays ='<canvas id="myChart_'+ el+ '" width="450" height="400"></canvas>';
+              let displays ='<canvas class="graph" id="myChart_'+ el+ '" width="450" height="400"></canvas>';
               $('#metrics').append(displays);
               let values_array = [];
               let timestamps_array = [];
@@ -76,9 +185,7 @@
                 values_array.push(data[el][pair].value);
                 dates.push(new Date(1000*data[el][pair].value));
                 years.push((new Date(1000*data[el][pair].value)).getHours)
-                console.log((new Date(1000*data[el][pair].value)).getHours);
               });
-              console.log(dates[0]);
 
 
               var ctx = document.getElementById('myChart_'+el).getContext('2d');
