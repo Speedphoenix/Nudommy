@@ -123,4 +123,26 @@ describe('Metrics', function () {
       });
     });
   });
+
+  describe('#deleteCol', function () {
+    it('should not find a deleted metric', function (done) {
+      const met1 = new Metric('1', 10);
+      const met2 = new Metric('2', 11);
+      let metrics: Metric[] = [ met1, met2 ];
+      let othermetrics1: Metric[] = [ new Metric('3', 13) ];
+      dbMet.save('someuser', 'kim', metrics, function (err: Error | null) {
+        dbMet.save('someuser', 'kim2', othermetrics1, function (err: Error | null) {
+          dbMet.deleteCol('someuser', 'kim', (err: Error | null, msg?: string) => {
+            dbMet.getAllFromUser('someuser', (err: Error | null, result: any) => {
+              expect(err).to.be.null;
+              expect(result.kim).to.be.undefined;
+              expect(result.kim2).to.not.be.empty;
+              expect(result).to.eql({ kim2: othermetrics1 });
+              done();
+            });
+          });
+        });
+      });
+    });
+  });
 });
