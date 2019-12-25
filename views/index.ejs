@@ -59,7 +59,7 @@
 
 
     <div class="col-md-6 col-md-offset-3">
-      <button class="btn btn-success" id="show-metrics">Show some metrics</button>
+      <button class="btn btn-success" id="show-metrics">Show/Actualize some metrics</button>
 
     </div>
     <div id="metrics"></div>
@@ -170,9 +170,9 @@
           url: '/metrics',
           type: 'GET',
           success: (data, textStatus, xhr) => {
-
+            $(".graph").remove();
             Object.keys(data).forEach((el)=> {
-              let displays ='<canvas id="myChart_'+ el+ '" width="450" height="400"></canvas>';
+              let displays ='<canvas class="graph" id="myChart_'+ el+ '" width="450" height="400"></canvas>';
               $('#metrics').append(displays);
               let values_array = [];
               let timestamps_array = [];
